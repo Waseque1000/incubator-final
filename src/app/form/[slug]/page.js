@@ -33,7 +33,7 @@ export default function StudentForm({ params: paramsPromise }) {
 
   const fetchForm = async () => {
     try {
-      const res = await api.get(`/forms/slug/${slug}`);
+      const res = await api.get(`/forms/${slug}`);
       setFormConfig(res.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Form not found');

@@ -127,10 +127,26 @@ export default function AdminForms() {
     }
   };
 
-  const copyToClipboard = (slug) => {
+  const copyToClipboard = async (slug) => {
     const url = `${window.location.origin}/form/${slug}`;
-    navigator.clipboard.writeText(url);
-    toast.success('Link copied to clipboard!');
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        // Fallback for non-HTTPS environments (like local IP testing)
+        const textArea = document.createElement("textarea");
+        textArea.value = url;
+        textArea.style.position = "absolute";
+        textArea.style.left = "-999999px";
+        document.body.prepend(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        textArea.remove();
+      }
+      toast.success('Link copied to clipboard!');
+    } catch (err) {
+      toast.error('Failed to copy link');
+    }
   };
 
   const addCustomField = () => {
