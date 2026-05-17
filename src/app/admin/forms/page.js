@@ -93,7 +93,7 @@ export default function AdminForms() {
       return toast.error('All custom fields must have a label');
     }
     try {
-      await api.put(`/forms/${editFormId}`, formData);
+      await api.put(`/forms/edit/${editFormId}`, formData);
       toast.success('Form updated successfully');
       setIsEditModalOpen(false);
       setEditFormId(null);
@@ -106,7 +106,7 @@ export default function AdminForms() {
 
   const toggleStatus = async (form) => {
     try {
-      await api.put(`/forms/${form._id}`, { isClosed: !form.isClosed });
+      await api.put(`/forms/edit/${form._id}`, { isClosed: !form.isClosed });
       toast.success('Status updated');
       fetchForms();
     } catch (err) {
@@ -168,11 +168,11 @@ export default function AdminForms() {
 
   const renderFormModal = (isEdit = false) => (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gray-900/20 backdrop-blur-sm" onClick={() => isEdit ? setIsEditModalOpen(false) : setIsModalOpen(false)}></div>
-      <div className="relative bg-white rounded-xl shadow-xl border border-gray-200 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-        <div className="p-6 flex justify-between items-center border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900">{isEdit ? 'Edit Form' : 'Create New Form'}</h2>
-          <button onClick={() => isEdit ? setIsEditModalOpen(false) : setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 rounded-lg p-1 transition-colors">
+      <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-md" onClick={() => isEdit ? setIsEditModalOpen(false) : setIsModalOpen(false)}></div>
+      <div className="relative bg-white/90 backdrop-blur-xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+        <div className="p-6 flex justify-between items-center border-b border-slate-100 bg-white/50">
+          <h2 className="text-xl font-black text-slate-800 tracking-tight">{isEdit ? 'Edit Campaign' : 'Create New Campaign'}</h2>
+          <button onClick={() => isEdit ? setIsEditModalOpen(false) : setIsModalOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white hover:bg-rose-50 rounded-full p-2 transition-all shadow-sm">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -285,19 +285,19 @@ export default function AdminForms() {
             </div>
           </div>
 
-          <div className="mt-6 pt-4 flex justify-end space-x-3">
+          <div className="mt-8 flex justify-end space-x-3">
             <button
               type="button"
               onClick={() => isEdit ? setIsEditModalOpen(false) : setIsModalOpen(false)}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg text-sm font-medium transition-colors"
+              className="px-5 py-3 text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-xl text-sm font-bold transition-colors shadow-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-white bg-gray-900 hover:bg-gray-800 shadow-sm rounded-lg text-sm font-medium transition-all"
+              className="px-6 py-3 text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 rounded-xl text-sm font-bold transition-all"
             >
-              {isEdit ? 'Save Changes' : 'Launch Form'}
+              {isEdit ? 'Save Changes' : 'Launch Campaign'}
             </button>
           </div>
         </form>
@@ -308,14 +308,14 @@ export default function AdminForms() {
   if (loading) return <Loader />;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative z-10">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white/60 backdrop-blur-xl p-6 rounded-[2rem] border border-white shadow-sm">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-900 to-purple-800 tracking-tight">
             Form Campaigns
           </h1>
-          <p className="text-gray-500 mt-1">Create and manage your student tracking forms</p>
+          <p className="text-slate-500 font-medium mt-1">Create and manage your student tracking forms</p>
         </div>
         <button
           onClick={() => {
@@ -329,83 +329,84 @@ export default function AdminForms() {
             });
             setIsModalOpen(true);
           }}
-          className="mt-4 sm:mt-0 flex items-center bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors shadow-sm"
+          className="mt-4 sm:mt-0 flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-indigo-200 hover:-translate-y-0.5 transition-all shadow-md"
         >
-          <Plus className="w-4 h-4 mr-2" />
-          Create Form
+          <Plus className="w-5 h-5 mr-2" />
+          Create Campaign
         </button>
       </div>
 
       {/* Forms List Section */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+      <div className="bg-white/70 backdrop-blur-2xl rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
         
         {/* Desktop Table View */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left whitespace-nowrap">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-white/50 border-b border-slate-100">
               <tr>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Form Identity</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Share Link</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Duration</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                <th className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-widest">Campaign Identity</th>
+                <th className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-widest">Share Link</th>
+                <th className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-widest">Duration</th>
+                <th className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-widest">Status</th>
+                <th className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-slate-100/50">
               {forms.map(form => (
-                <tr key={form._id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4">
+                <tr key={form._id} className="hover:bg-indigo-50/30 transition-colors group">
+                  <td className="px-8 py-5">
                     <div className="flex items-center">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${form.isClosed ? 'bg-gray-100 text-gray-400' : 'bg-gray-900 text-white'}`}>
-                        <Box className="w-5 h-5" />
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mr-4 shadow-sm ${form.isClosed ? 'bg-slate-100 text-slate-400' : 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white'}`}>
+                        <Box className="w-6 h-6" />
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900 text-sm">{form.formName}</p>
-                        <p className="text-xs text-gray-400">By {form.createdBy || 'Admin'}</p>
+                        <p className="font-black text-slate-800 text-base">{form.formName}</p>
+                        <p className="text-xs font-semibold text-slate-400">By {form.createdBy || 'Admin'}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <LinkIcon className="w-4 h-4 text-gray-400" />
-                      <a href={`/form/${form.formSlug}`} target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors font-medium">
+                  <td className="px-8 py-5">
+                    <div className="flex items-center space-x-2 text-sm text-slate-500 bg-white px-4 py-2 rounded-xl border border-slate-100 shadow-sm w-fit group-hover:border-indigo-100 transition-colors">
+                      <LinkIcon className="w-4 h-4 text-indigo-400" />
+                      <a href={`/form/${form.formSlug}`} target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 transition-colors font-bold">
                         /{form.formSlug}
                       </a>
-                      <button onClick={() => copyToClipboard(form.formSlug)} className="text-gray-400 hover:text-gray-900 transition-colors">
+                      <div className="w-px h-4 bg-slate-200 mx-2"></div>
+                      <button onClick={() => copyToClipboard(form.formSlug)} className="text-slate-400 hover:text-indigo-600 transition-colors">
                         <Copy className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="w-4 h-4 mr-2 text-gray-400" />
-                      {new Date(form.startDate).toLocaleDateString()} - {new Date(form.endDate).toLocaleDateString()}
+                  <td className="px-8 py-5">
+                    <div className="flex items-center text-sm font-semibold text-slate-600 bg-slate-50/50 px-4 py-2 rounded-xl w-fit">
+                      <Calendar className="w-4 h-4 mr-2 text-indigo-400" />
+                      {new Date(form.startDate).toLocaleDateString()} <span className="mx-2 text-slate-300">-</span> {new Date(form.endDate).toLocaleDateString()}
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-8 py-5">
                     <button 
                       onClick={() => toggleStatus(form)}
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                      className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold border transition-all ${
                         form.isClosed 
-                        ? 'bg-gray-100 text-gray-600 border-gray-200' 
-                        : 'bg-green-50 text-green-700 border-green-100'
+                        ? 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100' 
+                        : 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100'
                       }`}
                     >
                       {form.isClosed ? 'Closed' : 'Active'}
                     </button>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end space-x-2">
+                  <td className="px-8 py-5 text-right">
+                    <div className="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
                         onClick={() => openEditModal(form)}
-                        className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-2.5 text-indigo-400 hover:text-indigo-700 bg-white hover:bg-indigo-50 border border-slate-100 hover:border-indigo-100 rounded-xl transition-all shadow-sm"
                         title="Edit Form"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteForm(form._id)}
-                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        className="p-2.5 text-rose-400 hover:text-rose-700 bg-white hover:bg-rose-50 border border-slate-100 hover:border-rose-100 rounded-xl transition-all shadow-sm"
                         title="Delete Form"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -419,47 +420,47 @@ export default function AdminForms() {
         </div>
 
         {/* Mobile Card View */}
-        <div className="md:hidden divide-y divide-gray-200">
+        <div className="md:hidden divide-y divide-slate-100 p-4">
           {forms.map(form => (
-            <div key={form._id} className="p-4 space-y-4">
+            <div key={form._id} className="py-5 space-y-4">
               <div className="flex justify-between items-start">
                 <div className="flex items-center">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${form.isClosed ? 'bg-gray-100 text-gray-400' : 'bg-gray-900 text-white'}`}>
-                    <Box className="w-5 h-5" />
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mr-4 shadow-sm ${form.isClosed ? 'bg-slate-100 text-slate-400' : 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white'}`}>
+                    <Box className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">{form.formName}</p>
+                    <p className="font-black text-slate-800 text-lg">{form.formName}</p>
                     <button 
                       onClick={() => toggleStatus(form)}
-                      className={`mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${
-                        form.isClosed ? 'bg-gray-100 text-gray-600 border-gray-200' : 'bg-green-50 text-green-700 border-green-100'
+                      className={`mt-1 inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold border transition-all ${
+                        form.isClosed ? 'bg-slate-50 text-slate-500 border-slate-200' : 'bg-emerald-50 text-emerald-600 border-emerald-100'
                       }`}
                     >
                       {form.isClosed ? 'Closed' : 'Active'}
                     </button>
                   </div>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <button onClick={() => openEditModal(form)} className="p-2 text-gray-400">
+                <div className="flex items-center space-x-2">
+                  <button onClick={() => openEditModal(form)} className="p-2.5 text-indigo-400 bg-indigo-50 rounded-xl">
                     <Edit2 className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDeleteForm(form._id)} className="p-2 text-gray-400">
+                  <button onClick={() => handleDeleteForm(form._id)} className="p-2.5 text-rose-400 bg-rose-50 rounded-xl">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
-              <div className="grid grid-cols-1 gap-2">
-                <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <LinkIcon className="w-4 h-4 mr-2 text-gray-400" />
+              <div className="grid grid-cols-1 gap-3">
+                <div className="flex items-center justify-between bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm">
+                  <div className="flex items-center text-sm font-bold text-indigo-600">
+                    <LinkIcon className="w-4 h-4 mr-2" />
                     /{form.formSlug}
                   </div>
-                  <button onClick={() => copyToClipboard(form.formSlug)} className="text-gray-900">
+                  <button onClick={() => copyToClipboard(form.formSlug)} className="text-slate-400 hover:text-indigo-600 bg-white p-2 rounded-lg shadow-sm border border-slate-100">
                     <Copy className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="flex items-center text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                  <Calendar className="w-4 h-4 mr-2 text-gray-400" />
+                <div className="flex items-center text-sm font-semibold text-slate-500 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                  <Calendar className="w-4 h-4 mr-2 text-indigo-400" />
                   {new Date(form.startDate).toLocaleDateString()} - {new Date(form.endDate).toLocaleDateString()}
                 </div>
               </div>
